@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { logInHandler } from '@/app/actions/user/action';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -15,22 +16,14 @@ const LoginForm = () => {
     setError('');
 
     try {
-      const response = await fetch(`http://localhost:3000/api/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
+      const response = await logInHandler({username,password})
 
       if (response.ok) {
         // Assuming successful login, redirect to a dashboard or home page
         router.push('/dashboard');
       } else {
         // Show error message
-        setError(data.message || 'حدث خطأ ما. حاول مرة أخرى.');
+        setError(response.error || 'حدث خطأ ما. حاول مرة أخرى.');
       }
     } catch (err) {
       setError('تعذر الاتصال بالخادم. حاول مرة أخرى.');

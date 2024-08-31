@@ -1,5 +1,29 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+export const logInHandler=async({username,password}:{username:string,password:string})=>{
+ 
+  try{
+
+  const response =await fetch(`${API_URL}/api/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password }),
+  });
+  if(!response.ok){
+    const data=await response.json()
+    return { error: data.message, success: false, ok: false };
+  }
+  return { error: null, success: true, ok: true };
+
+} catch (error) {
+  console.error('Error login in :', error);
+  return { error: "حدث خطأ ما. حاول مرة أخرى.", success: false, ok: false };
+}
+
+}
+
 export const getUserInfo = async () => {
     try {
       const response = await fetch(`${API_URL}/api/auth/users/user`, {
