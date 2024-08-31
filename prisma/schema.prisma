@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  username      String
+  password      String
+  mobile_number String
+  role          String @default("seller")
+}
+
+model Medicine {
+  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  brand      String
+  dosageForm String
+  basePrice  Float
+  price      Float
+  image      String
+  createdAt  DateTime    @default(now())
+  batches    Batch[]
+  orders     Order[]
+  OrderItem  OrderItem[]
+}
+
+model Batch {
+  batchId     String   @id @default(auto()) @map("_id") @db.ObjectId
+  medicineId  String   @db.ObjectId
+  quantity    Int
+  batchNumber String
+  expiryDate  DateTime
+  createdAt   DateTime @default(now())
+  supplierId  String   @db.ObjectId // Foreign key for Supplier
+
+  medicine  Medicine    @relation(fields: [medicineId], references: [id])
+  supplier  Supplier    @relation(fields: [supplierId], references: [id]) // Relation to Supplier
+  orders    Order[]
+  OrderItem OrderItem[]
+}
+
+model Order {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime    @default(now())
+  totalPrice   Float
+  items        OrderItem[]
+  Medicine     Medicine?   @relation(fields: [medicineId], references: [id])
+  medicineId   String?     @db.ObjectId
+  Batch        Batch?      @relation(fields: [batchBatchId], references: [batchId])
+  batchBatchId String?     @db.ObjectId
+  Supplier     Supplier?   @relation(fields: [supplierId], references: [id])
+  supplierId   String?     @db.ObjectId
+  status  String? @default("PAID")
+  paymentMethod String? @default("CASH")
+  buyerName String?
+  buyerPhone String?
+}
+
+model OrderItem {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  medicineId String   @db.ObjectId
+  batchId    String   @db.ObjectId
+  supplierId String   @db.ObjectId
+  quantity   Int
+  totalPrice Float
+  orderDate  DateTime @default(now())
+  supplier   Supplier @relation(fields: [supplierId], references: [id]) // Relation to Supplier
+
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+  batch    Batch    @relation(fields: [batchId], references: [batchId])
+  Order    Order?   @relation(fields: [orderId], references: [id])
+  orderId  String?  @db.ObjectId
+}
+
+model Supplier {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  address     String
+  phoneNumber String
+  batches     Batch[] // Relation to Batches
+  orders      Order[]
+  OrderItem   OrderItem[]
+}
