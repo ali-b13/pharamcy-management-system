@@ -22,7 +22,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
       try {
         const res = await getAllUsers()
         
-        setUsers(res.users);
+        setUsers(res.users.length?res.users:[]);
       } catch (error) {
         console.error('فشل في جلب المستخدمين:', error);
       }
@@ -165,7 +165,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 <div className="bg-white shadow-md rounded-lg p-6 w-full md:w-2/4">
   <ul className="space-y-4">
     {usersData?.length ? (
-      usersData.map((u:USERType) => (
+      usersData?.map((u:USERType) => (
         <li key={u.id} className="flex items-center justify-between p-4 border-b border-gray-200 last:border-b-0">
           <div className="text-gray-900 text-sm font-medium ">
             {u.username}

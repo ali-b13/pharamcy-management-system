@@ -57,7 +57,7 @@ const SuppliersOverview = () => {
       const fetchSuppliers=async()=>{
         const data=await getAllSuppliers({page:"1",search:""}) 
         if(data.success){
-          setSuppliers(data.suppliers)
+          setSuppliers(data.suppliers.length?data.suppliers:[])
         }
       }
 
@@ -67,7 +67,7 @@ const SuppliersOverview = () => {
   return (
     <div className='w-full flex flex-col gap-3  md:text-center text-sm md:text-md p-1 md:p-3 border-2'>
         <Header title='الموردين'/>
-      {suppliers?.length?suppliers.map(item=>{
+      {suppliers?.length?suppliers?.map(item=>{
         return  <div key={item.id} className='flex justify-between items-center shadow-lg  bg-white text-gray-700  rounded-lg p-2'>
         <div className='flex flex-col items-start text-md  '>
             <p> الاسم : {item.name}</p>

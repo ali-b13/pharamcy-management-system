@@ -8,8 +8,11 @@ const medicinePage = async() => {
   const {expiredMedicines}=await   getExpiredMedicines()
   return (
     <section className='w-full flex flex-col md:flex-row p-2  gap-4'>
-     <MedicineList data={data}/>
-     <OverviewMedicines warnItems={warningMedicines} expiredItems={expiredMedicines}/>
+     <MedicineList data={data.length?data:[]}/>
+     <OverviewMedicines 
+     warnItems={warningMedicines.length?warningMedicines:[]}
+      expiredItems={expiredMedicines.length?expiredMedicines:[]}
+      />
     </section>
   )
 }

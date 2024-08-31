@@ -20,7 +20,7 @@ export const getSalesData=async(timeFrame:string="monthly")=>{
         const res=await axios.get(`${API_URL}/api/dashboard/sales`,{params:{timeFrame}})
         if(res.status==200){
             
-            return res.data
+            return res.data.salesData
         }
     } catch (error) {
         console.log(error,'')

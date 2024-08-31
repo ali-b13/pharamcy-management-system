@@ -36,7 +36,7 @@ const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages }
     setError(null);
     try {
       const data = await getMedicines(query, page, PAGE_SIZE);
-      setMedicines(data.medicines);
+      setMedicines(data.medicines.length?data.medicines:[]);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error fetching medicines:', error);

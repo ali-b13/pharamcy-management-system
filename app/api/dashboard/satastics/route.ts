@@ -49,11 +49,11 @@ export const GET =async(req:NextRequest)=>{
         // Construct the response
         const statistics = {
           totalSoldProducts: totalSoldProducts._sum.quantity||0 ,
-          totalBatches: totalBatches,
-          totalMedicines: totalMedicines,
+          totalBatches: totalBatches ||0,
+          totalMedicines: totalMedicines ||0,
           totalReceivedAmount: totalReceivedAmount._sum.totalPrice || 0.00,
-          totalWarningMedicines: totalWarningMedicines,
-          totalExpiredMedicines: totalExpiredMedicines,
+          totalWarningMedicines: totalWarningMedicines ||0,
+          totalExpiredMedicines: totalExpiredMedicines ||0,
         };
     
         // Return the response
