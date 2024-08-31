@@ -1,9 +1,10 @@
 import axios from "axios"
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getSalesReport=async({startDate,endDate,timeFrame}:{startDate:Date,endDate:Date,timeFrame:string})=>{
    
     try {
-        const res=await axios.get(`api/reports/salesReport`,{params:{
+        const res=await axios.get(`${API_URL}/api/reports/salesReport`,{params:{
            startDate,
            endDate,
            timeFrame
@@ -19,7 +20,7 @@ export const getSalesReport=async({startDate,endDate,timeFrame}:{startDate:Date,
 export const getInventoryReport=async({type}:{type:string})=>{
    
     try {
-        const res=await axios.get(`api/reports/inventoryReport`,{params:{
+        const res=await axios.get(`${API_URL}/api/reports/inventoryReport`,{params:{
          type
         }})
        
@@ -33,7 +34,7 @@ export const getInventoryReport=async({type}:{type:string})=>{
 export const getLowStockReport=async({type}:{type:string})=>{
    
     try {
-        const res=await axios.get(`http://localhost:3000/api/reports/lowStockReport`,{params:{type:type}})
+        const res=await axios.get(`${API_URL}/api/reports/lowStockReport`,{params:{type:type}})
        
             return res.data
         

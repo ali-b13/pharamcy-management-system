@@ -1,8 +1,10 @@
 import axios from "axios"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export const getSatasticsData=async()=>{
     try {
-        const res=await axios.get(`http://localhost:3000/api/dashboard/satastics`)
+        const res=await axios.get(`${API_URL}/api/dashboard/satastics`)
         if(res.status==200){
             
             return res.data
@@ -15,7 +17,7 @@ export const getSatasticsData=async()=>{
 
 export const getSalesData=async(timeFrame:string="monthly")=>{
     try {
-        const res=await axios.get(`http://localhost:3000/api/dashboard/sales`,{params:{timeFrame}})
+        const res=await axios.get(`${API_URL}/api/dashboard/sales`,{params:{timeFrame}})
         if(res.status==200){
             
             return res.data

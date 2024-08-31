@@ -2,7 +2,7 @@ import { getSatasticsData } from '@/app/actions/dashboard/actions';
 import { FaAccusoft, FaMoneyBillWave, FaPills, FaExclamationTriangle } from 'react-icons/fa';
 import { BiSolidPackage } from "react-icons/bi";
 
-interface StatisticsProps{
+export interface StatisticsProps{
   totalSoldProducts:number
   totalBatches:number
   totalMedicines:number

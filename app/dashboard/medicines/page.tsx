@@ -1,4 +1,3 @@
-import React from 'react'
 import MedicineList from './components/MedicineList'
 import OverviewMedicines from './components/OverviewMedicines'
 import { getExpiredMedicines, getMedicines, getMedicineWarnings } from '../../actions/medicine/queries'

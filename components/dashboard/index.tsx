@@ -1,27 +1,22 @@
-import React from 'react'
+"use client"
 import SalesComponent from './Sales'
-import Satastics from './Satastics'
-import { getSalesData, getSatasticsData } from '@/app/actions/dashboard/actions'
+import Satastics, { StatisticsProps } from './Satastics'
+ 
+ interface DashboardProps{
+  salesData :any;
+  satastics:StatisticsProps
+ }
+const Dashboard :React.FC<DashboardProps>= ({salesData,satastics}) => {
 
-const Dashboard = async() => {
-  const salesData =await getSalesData()
-  const {
-    totalSoldProducts,
-    totalBatches,
-    totalMedicines,
-    totalReceivedAmount,
-    totalWarningMedicines,
-    totalExpiredMedicines,
-  } = await getSatasticsData();
   return (
    <>
    <Satastics   
-    totalSoldProducts={totalSoldProducts}
-    totalBatches={totalBatches}
-    totalMedicines={totalMedicines}
-    totalReceivedAmount={totalReceivedAmount}
-    totalWarningMedicines={totalWarningMedicines}
-    totalExpiredMedicines={totalExpiredMedicines}
+    totalSoldProducts={satastics.totalSoldProducts}
+    totalBatches={satastics.totalBatches}
+    totalMedicines={satastics.totalMedicines}
+    totalReceivedAmount={satastics.totalReceivedAmount}
+    totalWarningMedicines={satastics.totalWarningMedicines}
+    totalExpiredMedicines={satastics.totalExpiredMedicines}
     />
    <SalesComponent data={salesData}/>
    </>

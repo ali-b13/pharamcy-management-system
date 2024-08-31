@@ -37,7 +37,7 @@ const MedicineItem: React.FC<MedicineItemProps> = ({ id, name, price, brand, dos
         </div>
       </div>
       <div className="flex gap-2 mt-4 md:mt-0">
-        <Link href={`/medicines/edit/${id}`} className="flex items-center gap-1 p-2 rounded-lg text-yellow-600 border border-yellow-300 bg-yellow-100 hover:bg-yellow-200">
+        <Link href={`/dashboard/medicines/edit/${id}`} className="flex items-center gap-1 p-2 rounded-lg text-yellow-600 border border-yellow-300 bg-yellow-100 hover:bg-yellow-200">
           <span>تعديل</span>
           <CiEdit />
         </Link>
