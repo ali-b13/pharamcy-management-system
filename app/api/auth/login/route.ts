@@ -17,6 +17,7 @@ export const POST = async (req: NextRequest) => {
 
     // If no users exist, create a default admin user
     if (userCount === 0) {
+      console.log('will create ',ADMIN_USERNAME,ADMIN_PASSWORD)
       const hashedPassword = bcrypt.hashSync(ADMIN_PASSWORD, 10);
       await prisma.user.create({
         data: {

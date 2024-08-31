@@ -9,6 +9,7 @@ import BatchItem from "./BatchItem";
 import { BatchWithMedicineProps } from "@/types.dt";
 import AlertBox from "@/components/Alert";
 import Header from "@/components/Header";
+import BatchesSkelton from "./BatchesSkelton";
 
 const BatchesList = ({ batches, totalPages }: { batches: BatchWithMedicineProps[], totalPages: number }) => {
   const router = useRouter();
@@ -97,7 +98,8 @@ const BatchesList = ({ batches, totalPages }: { batches: BatchWithMedicineProps[
       />
       <Header title="الدفعات"/>
      <div className="border-b-2 min-h-40">
-     {batchesData?.length ? (
+
+     {loading ? <BatchesSkelton/>:batchesData?.length ? (
         batchesData.map((batch) => (
           <BatchItem key={batch.batchId} item={batch} onEdit={handleEdit} onDelete={handleDelete} />
         ))
