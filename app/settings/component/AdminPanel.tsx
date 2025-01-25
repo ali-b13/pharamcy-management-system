@@ -31,7 +31,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ user }) => {
 
   useEffect(() => {
     fetchUsers();
-  },[]);
+  },[fetchUsers]);
   
 
   const confirmDelete = async () => {

@@ -1,20 +1,16 @@
-
+// batches/page.tsx (Server Component)
 import BatchesList from './components/BatchesList'
-import { getBatches } from '../../actions/batch/queries';
 import SuppliersOverview from './components/SuppliersOverview'
 
-const batchesPage = async() => {
-   const {batches,totalPages} =await getBatches()
-  
+const BatchesPage = () => {
   return (
-   
-     <div className='w-full flex flex-col md:flex-row gap-3'>
-     <BatchesList batches={batches.length?batches:[]} totalPages={totalPages}/>
-       <div className='w-full md:w-2/4'>
+    <div className='w-full flex flex-col md:flex-row gap-3'>
+      <BatchesList />
+      <div className='w-full md:w-2/4'>
         <SuppliersOverview />
       </div>
     </div>
   )
 }
 
-export default batchesPage
+export default BatchesPage

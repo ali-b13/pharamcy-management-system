@@ -1,4 +1,7 @@
 import axios from "axios"
+import {config} from "dotenv"
+config()
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getMedicines=async(searchQuery:string="",currentPage:number=1,pageSize:number=7)=>{

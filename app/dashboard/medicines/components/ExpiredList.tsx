@@ -8,14 +8,10 @@ import dayjs from 'dayjs';
 import { getExpiredMedicines } from '@/app/actions/medicine/queries';
 import Header from '@/components/Header';
 
-interface ExpiredMedicinesProps {
-    medicines: BatchWithMedicineProps[];
-    totalPages: number;
-}
 
-const ExpiredList = ({ medicines, totalPages }: ExpiredMedicinesProps) => {
-    const [expiredMedicines, setMedicines] = useState<BatchWithMedicineProps[]>(medicines);
-    const [overAllPages, setTotalPages] = useState(totalPages);
+const ExpiredList = () => {
+    const [expiredMedicines, setMedicines] = useState<BatchWithMedicineProps[]>([]);
+    const [overAllPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

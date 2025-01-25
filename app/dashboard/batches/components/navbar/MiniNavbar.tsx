@@ -4,8 +4,6 @@ import Link from 'next/link';
 import PrimaryButton from '@/components/buttons/PrimaryButton';
 import SelectFilter from '@/components/inputs/SelectFilter';
 import TextInputWithoutLabel from '@/components/inputs/TextInputWithoutLabel';
-import YearSelect from '@/components/inputs/YearFilter';
-
 interface NavbarProps {
   handleOnSubmit: (query: any) => void;
   handleBatchNumber: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -31,8 +29,8 @@ const MiniNavbar: React.FC<NavbarProps> = ({
 
   return (
     <div className="p-4 bg-gray-100 rounded-lg shadow-md flex flex-col md:flex-row items-center gap-4">
-      <Link className='bg-green-500 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-green-900' href={'/batches/add-batch'}> اضافة دفعه </Link>
-      <Link className='bg-blue-900 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-blue-500' href={'/batches/add-supplier'}> اضافة  مورد </Link>
+      <Link className='bg-green-500 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-green-900' href={'/dashboard/batches/add-batch'}> اضافة دفعه </Link>
+      <Link className='bg-blue-900 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-blue-500' href={'/dashboard/batches/add-supplier'}> اضافة  مورد </Link>
       <>
         <TextInputWithoutLabel
           name="BatchNumber"

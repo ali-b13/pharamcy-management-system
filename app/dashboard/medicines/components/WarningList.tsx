@@ -8,13 +8,10 @@ import { BatchWithMedicineProps } from '@/types.dt';
 import { getMedicineWarnings } from '@/app/actions/medicine/queries';
 import Header from '@/components/Header';
 
-interface WarningListProps extends WarningProps {
-    totalPages: number;
-}
 
-const WarningList = ({ medicines, totalPages }: WarningListProps) => {
-    const [warningMedicines, setMedicines] = useState<BatchWithMedicineProps[]>(medicines);
-    const [overAllPages, setTotalPages] = useState(totalPages);
+const WarningList = () => {
+    const [warningMedicines, setMedicines] = useState<BatchWithMedicineProps[]>([]);
+    const [overAllPages, setTotalPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

@@ -9,6 +9,7 @@ const ADMIN_USERNAME = process.env.ADMIN_USERNAME || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin';
 
 export const POST = async (req: NextRequest) => {
+  console.log("login in ")
   try {
     const { username, password } = await req.json();
 

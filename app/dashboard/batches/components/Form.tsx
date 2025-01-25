@@ -64,7 +64,7 @@ const BatchForm: React.FC<FormProps> = ({ label, isEditable, item }) => {
       if (response.success) {
         setSuccessStatus(true);
         setTimeout(() => {
-          router.push('/batches');
+          router.push('/dashboard/batches');
         }, 1000);
         setServerError(null)
       } else {

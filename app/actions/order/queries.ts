@@ -1,5 +1,8 @@
 import { CartItem } from "@/types.dt"
 import axios from "axios"
+import {config} from "dotenv"
+config()
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface OrderDetails {

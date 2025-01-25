@@ -78,8 +78,8 @@ export const GET = async (req: NextRequest) => {
             });
         }
         
-        console.log(salesData);
-        return NextResponse.json({salesData:salesData.length?salesData:[]}, { status: 200 });
+     
+        return NextResponse.json({salesData:salesData||[]}, { status: 200 });
         
     } catch (error) {
         console.error(`Error fetching ${timeFrame} sales data:`, error);

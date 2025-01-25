@@ -2,6 +2,7 @@ import { calculateRemainingDays, calculateRemainingDaysWithText } from '@/utils/
 import dayjs from 'dayjs';
 import { BatchWithMedicineProps } from '@/types.dt';
 import StatusMedicine from '../../../../components/StatusMedicine';
+import Image from 'next/image';
 
 const ShowFullDetails = ({ batch }: { batch: BatchWithMedicineProps }) => {
   if (!batch) {
@@ -13,7 +14,9 @@ const ShowFullDetails = ({ batch }: { batch: BatchWithMedicineProps }) => {
       <div className="flex flex-col md:flex-row gap-3">
         <div className="md:w-2/4 flex justify-center items-start md:border-l-2">
           {false? (
-            <img
+            <Image
+            height={120}
+            width={120}
               src={batch.medicine.image}
               alt={batch.medicine.name}
               className="rounded-lg shadow-lg mb-4 md:mb-0 max-w-full max-h-full object-cover"

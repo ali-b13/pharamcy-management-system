@@ -68,7 +68,7 @@ const SupplierForm:React.FC<SupplierFormProps> = ({item,isEditable,label}) => {
   };
  const cancel=()=>{
   setError(null)
-  router.push('/batches')
+  router.push('dashboard/batches')
  }
   return (
     <div className="min-h-[90vh] flex flex-col items-center justify-center bg-gray-100">

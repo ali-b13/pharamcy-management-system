@@ -93,7 +93,7 @@ const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages }
 
       <div className='flex flex-col md:flex-row gap-3 md:items-center border-neutral-400 border-b-2 pb-4'>
         <SearchBar className="w-full  md:w-2/4" searchQuery={searchQuery} setSearchQuery={handleSearchChange} />
-        <Link className=' w-1/3  bg-teal-500  text-center text-white p-1 md:p-2 rounded-lg hover:bg-teal-700  hover:transition-all duration-200' href={'/medicines/add-medicine'}>
+        <Link className=' w-1/3  bg-teal-500  text-center text-white p-1 md:p-2 rounded-lg hover:bg-teal-700  hover:transition-all duration-200' href={'/dashboard/medicines/add-medicine'}>
           اضافه دواء جديد
         </Link>
       </div>

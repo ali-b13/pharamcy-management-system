@@ -1,3 +1,6 @@
+import {config} from "dotenv"
+config()
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const logInHandler=async({username,password}:{username:string,password:string})=>{
@@ -12,6 +15,7 @@ export const logInHandler=async({username,password}:{username:string,password:st
     body: JSON.stringify({ username, password }),
   });
   if(!response.ok){
+    console.log(response.status)
     const data=await response.json()
     return { error: data.message, success: false, ok: false };
   }

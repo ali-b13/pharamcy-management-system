@@ -26,7 +26,7 @@ export const GET = async (req: NextRequest) => {
             take: pageSizeNumber,
         });
 
-        return NextResponse.json({batches,success:true,error:null,totalPages:Math.ceil(batches.length / pageSizeNumber)||1},{status:200});
+        return NextResponse.json({batches:batches||[],success:true,error:null,totalPages:Math.ceil(batches.length / pageSizeNumber)||1},{status:200});
     } catch (error) {
         console.error('Error fetching batches:', error);
         return NextResponse.json({ error: 'An error occurred while fetching batches.' ,success:false}, { status: 500 });

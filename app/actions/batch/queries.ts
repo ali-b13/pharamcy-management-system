@@ -1,7 +1,8 @@
 import axios from "axios";
-
+import {config} from "dotenv"
+config()
 // Base API URL from environment variables
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
 
 export const getBatches = async (
   searchQuery = { batchNumber: "", status: "all", sortOrder: "" },
@@ -9,18 +10,11 @@ export const getBatches = async (
   pageSize = 6
 ) => {
   try {
-    const res = await axios.get(`${API_URL}/api/batches`, {
-      params: {
-        searchQuery,
-        pageSize,
-        currentPage,
-      },
-    });
-    if (res.status === 200) {
-      return res.data;
-    }
+    const res = await axios.get(`${API_URL}/api/batches`, { params: { searchQuery, pageSize, currentPage } });
+    return res.data || { batches: [], totalPages: 0 };
   } catch (error) {
-    return [];
+    console.error('Error fetching batches:', error);
+    return { batches: [], totalPages: 0 }; // Return proper fallback shape
   }
 };
 

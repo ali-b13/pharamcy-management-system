@@ -1,4 +1,6 @@
 import axios from "axios"
+import { config } from "dotenv";
+config()
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getSalesReport=async({startDate,endDate,timeFrame}:{startDate:Date,endDate:Date,timeFrame:string})=>{

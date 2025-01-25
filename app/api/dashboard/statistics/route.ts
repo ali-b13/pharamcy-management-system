@@ -57,7 +57,7 @@ export const GET =async(req:NextRequest)=>{
         };
     
         // Return the response
-       return NextResponse.json(statistics,{status:200});
+       return NextResponse.json({statistics},{status:200});
       } catch (error:any) {
         
        return NextResponse.json({error:"Internal server error"},{status:404});

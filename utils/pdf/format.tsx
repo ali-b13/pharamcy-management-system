@@ -58,7 +58,7 @@ const getReportHeader = (reportTitle:string) => ({
   margin: [0, 0, 0, 20]
 });
 
-const getSalesReportDocDefinition = (reportData: any,totalPrice:number,totalProfit:number,totalSold:number) => {
+const getSalesReportDocDefinition = (reportData: any) => {
   // Calculate totals
   const totals = reportData.reduce((acc: any, row: any) => {
     acc.totalSold += row.totalSold || 0;
@@ -91,6 +91,23 @@ const getSalesReportDocDefinition = (reportData: any,totalPrice:number,totalProf
     ]
   ];
 
+  const footerData: any[] = [
+    [
+      { text: ' السعر إجمالي', style: 'tableHeaderArabic' },        
+      { text: ' المباعةالمنتجات إجمالي ', style: 'tableHeaderArabic' },
+      { text: ' الربح إجمالي', style: 'tableHeaderArabic' },
+      { text: ' العملة', style: 'tableHeaderArabic' },
+    ]
+  ];
+  
+  // Adding the data row
+  footerData.push([
+    { text: formattedTotals.totalPrice.toString(), alignment: "center", style: "tableBodyEnglish" },
+    { text: formattedTotals.totalSold.toString(), alignment: "center", style: "tableBodyEnglish" },
+    { text: formattedTotals.totalProfit.toString(), alignment: "center", style: "tableBodyEnglish" },
+    { text: " سعودي ريال", alignment: "center", style: "tableBodyArabic" },
+  ]);
+    
   reportData.forEach((row: any) => {
     tableBody.push([
       { text: row.name, alignment: "center", style: "tableBodyEnglish" },
@@ -108,7 +125,7 @@ const getSalesReportDocDefinition = (reportData: any,totalPrice:number,totalProf
     pageSize: 'A4',
     pageMargins: [10, 10, 10, 60], // Increase bottom margin to fit footer
     content: [
-      getReportHeader("تقرير المبيعات"),
+      getReportHeader(" المبيعات تقرير"),
       {
         table: {
           headerRows: 1,
@@ -136,32 +153,35 @@ const getSalesReportDocDefinition = (reportData: any,totalPrice:number,totalProf
         }
       },
       {
+        
         table: {
-          widths: ['*', '*'], // Two columns, one for label and one for value
-          body: [
-            [
-              { text: 'إجمالي السعر:', style: 'tableHeaderArabic' },
-              { text: formattedTotals.totalPrice.toFixed(2).toString(), style: 'tableBodyEnglish' }
-            ],
-            [
-              { text: 'إجمالي المنتجات المباعة:', style: 'tableHeaderArabic' },
-              { text: formattedTotals.totalSold.toString(), style: 'tableBodyEnglish' }
-            ],
-            [
-              { text: 'إجمالي الربح:', style: 'tableHeaderArabic' },
-              { text: formattedTotals.totalProfit.toFixed(2).toString(), style: 'tableBodyEnglish' }
-            ]
-          ]
+          body:footerData
         },
-        layout: 'noBorders', // No borders for the footer table
-        margin: [0, 20, 0, 0], // Margin to separate from the table
-        alignment: 'center' // Center align the footer table
+        layout: {
+          hLineColor: "#cccccc",
+          vLineColor: "#cccccc",
+          fillColor: function (rowIndex: any) {
+            return (rowIndex % 2 === 0) ? '#f9f9f9' : '#ffffff';
+          },
+          hLineWidth: function (i: any, node: any) {
+            return (i === 0 || i === node.table.body.length) ? 2 : 1;
+          },
+          vLineWidth: function (i: any) {
+            return 1;
+          },
+          paddingLeft: function (i: any) {
+            return 4; // Reduced padding for a more compact layout
+          },
+          paddingRight: function (i: any, node: any) {
+            return 4;
+          }
+        },
+        margin: [10, 10, 10, 10], // Margin to separate from the table
       }
     ],
     defaultStyle: {
       font: "Roboto",
-      alignment: "center",
-      direction: "rtl"
+      alignment: "center"
     },
     styles: {
       headerArabic: {
@@ -186,12 +206,18 @@ const getSalesReportDocDefinition = (reportData: any,totalPrice:number,totalProf
         margin: [0, 0, 0, 0]
       },
       tableHeaderArabic: {
-        fontSize: 12,
+        fontSize: 10,
         font: 'DroidArabicKufi',
         color: "white",
         fillColor: "#16A085",
         alignment: "center",
         border: [true, true, true, true]
+      },
+      tableBodyArabic: {
+        fontSize: 10,
+        font: 'DroidArabicKufi',
+        alignment: "center",
+        margin: [0, 0, 0, 0]
       },
       tableBodyEnglish: {
         fontSize: 10,
@@ -441,7 +467,7 @@ export const exportToPDF = (data:PdfInterface) => {
     const totalPrice = data.totalPrice ?? 0;
     const totalProfit = data.totalProfit ?? 0;
     const totalSold = data.totalSold ?? 0;
-    docDefinition = getSalesReportDocDefinition(data.reportData,totalPrice,totalProfit,totalSold);
+    docDefinition = getSalesReportDocDefinition(data.reportData);
   } else if (data.reportType === "inventory") {
     docDefinition = getInventoryReportDocDefinition(data.reportData);
   } else if (data.reportType === "lowStock") {

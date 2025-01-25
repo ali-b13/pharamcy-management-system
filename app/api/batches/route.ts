@@ -62,7 +62,7 @@ export const GET = async (req: NextRequest) => {
     });
 
     return NextResponse.json({
-      batches,
+      batches:batches||[],
       totalPages: Math.ceil(totalBatches / pageSizeNumber),
     }, { status: 200 });
 

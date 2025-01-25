@@ -61,8 +61,8 @@ const handleSearch = () => {
           </>
         )}
        <div className='flex gap-2 items-center w-full'>
-       <Link className='bg-green-500 text-white p-2 rounded-lg w-full text-center hover:bg-green-800' href={'/batches/add-batch'}> اضافة دفعه جديدة</Link>
-       <Link className='bg-blue-900 text-white p-2 rounded-lg w-2/4 hover:bg-blue-600' href={'/batches/add-supplier'}> اضافة  مورد جديد</Link>
+       <Link className='bg-green-500 text-white p-2 rounded-lg w-full text-center hover:bg-green-800' href={'/dashboard/batches/add-batch'}> اضافة دفعه جديدة</Link>
+       <Link className='bg-blue-900 text-white p-2 rounded-lg w-2/4 hover:bg-blue-600' href={'/dashboard/batches/add-supplier'}> اضافة  مورد جديد</Link>
        </div>
 
        <PrimaryButton label='ابحث' className=' w-full md:w-2/4 mt-2 md:mt-0 p-2 bg-blue-500 text-white rounded-md
