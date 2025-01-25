@@ -2,7 +2,7 @@ import axios from "axios";
 import {config} from "dotenv"
 config()
 // Base API URL from environment variables
-const API_URL = process.env.NEXT_PUBLIC_API_URL as string;
+const API_URL = process.env.NEXTAUTH_URL as string;
 
 export const getBatches = async (
   searchQuery = { batchNumber: "", status: "all", sortOrder: "" },

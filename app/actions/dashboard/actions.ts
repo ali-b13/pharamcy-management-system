@@ -1,7 +1,7 @@
 import axios from "axios"
 import {config} from "dotenv"
 config()
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXTAUTH_URL;
 
 export const getSatasticsData=async()=>{
     try {
