@@ -5,7 +5,7 @@ const API_URL = process.env.NEXTAUTH_URL;
 
 export const getSatasticsData=async()=>{
     try {
-        const res=await axios.get(`${API_URL}/api/dashboard/statistics`)
+        const res=await axios.get(`/api/dashboard/statistics`)
         if(res.status==200){
             
             return res.data.statistics||[]
@@ -23,7 +23,7 @@ export const getSatasticsData=async()=>{
 
 export const getSalesData=async(timeFrame:string="monthly")=>{
     try {
-        const res=await axios.get(`${API_URL}/api/dashboard/sales`,{params:{timeFrame}})
+        const res=await axios.get(`/api/dashboard/sales`,{params:{timeFrame}})
         if(res.status==200){
             
             return res.data.salesData

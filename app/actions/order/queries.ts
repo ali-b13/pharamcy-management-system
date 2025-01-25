@@ -14,7 +14,7 @@ interface OrderDetails {
 export const placeOrder=async(OrderDetails:OrderDetails)=>{
     if(!OrderDetails.cart.length)return  {error:"لم يتم استكمال الطلب",success:false}
     try {
-        const res=await axios.post(`${API_URL}/api/orders`,OrderDetails)
+        const res=await axios.post(`/api/orders`,OrderDetails)
         if(res.status==200){
             
             return res.data
@@ -34,7 +34,7 @@ interface OrderQueryType {
 export const getAllOrders=async({page=1,pageSize=10,orderDate,sort,status}:OrderQueryType)=>{
    
     try {
-        const res=await axios.get(`${API_URL}/api/orders`,{params:{
+        const res=await axios.get(`/api/orders`,{params:{
             page,
             pageSize,
             orderDate,
@@ -52,7 +52,7 @@ export const getAllOrders=async({page=1,pageSize=10,orderDate,sort,status}:Order
 export const refundOrder=async(orderId:string)=>{
     try {
 
-        const res=await axios.post(`${API_URL}/api/orders/refund`,{orderId})
+        const res=await axios.post(`/api/orders/refund`,{orderId})
        
             return res.data
         
@@ -64,7 +64,7 @@ export const refundOrder=async(orderId:string)=>{
 export const payDebtOrder=async(orderId:string)=>{
     try {
 
-        const res=await axios.put(`${API_URL}/api/orders`,{orderId})
+        const res=await axios.put(`/api/orders`,{orderId})
        
             return res.data
         

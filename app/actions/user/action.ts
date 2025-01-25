@@ -7,7 +7,7 @@ export const logInHandler=async({username,password}:{username:string,password:st
  
   try{
 
-  const response =await fetch(`${API_URL}/api/auth/login`, {
+  const response =await fetch(`/api/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export const logInHandler=async({username,password}:{username:string,password:st
 
 export const getUserInfo = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/users/user`, {
+      const response = await fetch(`/api/auth/users/user`, {
         method: 'GET',
         credentials: 'include', // Ensure cookies are included in the request
       });
@@ -51,7 +51,7 @@ export const getUserInfo = async () => {
 
   export const verifyPassword = async (password: string) => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/users/user/verify-password`, {
+      const response = await fetch(`/api/auth/users/user/verify-password`, {
         method: 'POST',
         credentials: 'include', // Ensure cookies are included in the request
         headers: {
@@ -69,7 +69,7 @@ export const getUserInfo = async () => {
   
   export const updateUser = async (username: string, newPassword: string, mobileNumber: string) => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/users/user/update-user`, {
+      const response = await fetch(`/api/auth/users/user/update-user`, {
         method: 'POST',
         credentials: 'include', // Ensure cookies are included in the request
         headers: {
@@ -87,7 +87,7 @@ export const getUserInfo = async () => {
   
   export const addUser = async (username: string, password: string,mobileNumber:string) => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/users/user/add-user`, {
+      const response = await fetch(`/api/auth/users/user/add-user`, {
         method: 'POST',
         credentials: 'include', // Ensure cookies are included in the request
         headers: {
@@ -108,7 +108,7 @@ export const getUserInfo = async () => {
   
   export const getAllUsers = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/auth/users`, {
+      const response = await fetch(`/api/auth/users`, {
         method: 'GET',
         credentials: 'include', // Ensure cookies are included in the request
       });
@@ -128,7 +128,7 @@ export const getUserInfo = async () => {
 
 export const logOut=async()=>{
     try {
-        const response = await fetch(`${API_URL}/api/auth/logout`, {
+        const response = await fetch(`/api/auth/logout`, {
             method: 'POST',
             credentials: 'include', // Ensure cookies are included in the request
           });
@@ -140,7 +140,7 @@ export const logOut=async()=>{
 
 export const DeleteUser = async (userId:string) => {
   try {
-    const response = await fetch(`${API_URL}/api/auth/users/user?userId=${userId}`, {
+    const response = await fetch(`/api/auth/users/user?userId=${userId}`, {
       method: 'DELETE',
 
       credentials: 'include', // Ensure cookies are included in the request

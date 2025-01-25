@@ -6,7 +6,7 @@ const API_URL = process.env.NEXTAUTH_URL;
 
 export const getMedicines=async(searchQuery:string="",currentPage:number=1,pageSize:number=7)=>{
     try {
-        const res=await axios.get(`${API_URL}/api/medicine`,{params: {
+        const res=await axios.get(`/api/medicine`,{params: {
             page: currentPage,
             pageSize: pageSize,
             search: searchQuery,
@@ -22,7 +22,7 @@ export const getMedicines=async(searchQuery:string="",currentPage:number=1,pageS
 
 export const addNewMedicine=async(form:FormData)=>{
   try {
-    const res=await axios.post(`${API_URL}/api/medicine`,form,{headers: {'Content-Type': 'multipart/form-data'}})
+    const res=await axios.post(`/api/medicine`,form,{headers: {'Content-Type': 'multipart/form-data'}})
     return {error:res.data.error,success:res.data.success}
   }catch (error) {
     console.log(error,'error')
@@ -31,7 +31,7 @@ export const addNewMedicine=async(form:FormData)=>{
 }
 export const getMedicine=async(id:string)=>{
  try {
-     const res =await axios.get(`${API_URL}/api/medicine/one-medicine`,{params:{id:id}})
+     const res =await axios.get(`/api/medicine/one-medicine`,{params:{id:id}})
      if(res.status==200){
         return {error:false,success:true,medicine:res.data.medicine}
      }else{
@@ -44,7 +44,7 @@ export const getMedicine=async(id:string)=>{
 
 export const updateMedicine=async(form:FormData)=>{
   try {
-    const res =await axios.put(`${API_URL}/api/medicine/one-medicine`,form,{headers: {'Content-Type': 'multipart/form-data'}})
+    const res =await axios.put(`/api/medicine/one-medicine`,form,{headers: {'Content-Type': 'multipart/form-data'}})
     return {error:res.data.error,success:res.data.success}
   }catch (error) {
     console.log(error,'error')
@@ -54,7 +54,7 @@ export const updateMedicine=async(form:FormData)=>{
 
 export const deleteMedicine=async(id:string)=>{
   try {
-    const res =await axios.delete(`${API_URL}/api/medicine/one-medicine`,{params:{id:id}})
+    const res =await axios.delete(`/api/medicine/one-medicine`,{params:{id:id}})
     return {error:res.data.error,success:res.data.success}
   }catch (error) {
     console.log(error,'error')
@@ -64,7 +64,7 @@ export const deleteMedicine=async(id:string)=>{
 
 export const getMedicineWarnings=async(currentPage:number=1,pageSize:number=4)=>{
   try {
-    const res =await axios.get(`${API_URL}/api/medicine/warning`,{params:{currentPage,pageSize}})
+    const res =await axios.get(`/api/medicine/warning`,{params:{currentPage,pageSize}})
     
     return {error:res.data.error,success:res.data.success,warningMedicines:res.data.batches,totalPages:res.data.totalPages}
   }catch (error) {
@@ -75,7 +75,7 @@ export const getMedicineWarnings=async(currentPage:number=1,pageSize:number=4)=>
 
 export const getExpiredMedicines=async(currentPage:number=1,pageSize:number=4)=>{
   try {
-    const res =await axios.get(`${API_URL}/api/medicine/expired`,{params:{currentPage,pageSize}})
+    const res =await axios.get(`/api/medicine/expired`,{params:{currentPage,pageSize}})
     return {error:res.data.error,success:res.data.success,expiredMedicines:res.data.batches,totalPages:res.data.totalPages}
   }catch (error) {
     console.log(error,'error')

@@ -1,8 +1,7 @@
 import axios from "axios";
 import {config} from "dotenv"
 config()
-// Base API URL from environment variables
-const API_URL = process.env.NEXTAUTH_URL as string;
+
 
 export const getBatches = async (
   searchQuery = { batchNumber: "", status: "all", sortOrder: "" },
@@ -10,7 +9,7 @@ export const getBatches = async (
   pageSize = 6
 ) => {
   try {
-    const res = await axios.get(`${API_URL}/api/batches`, { params: { searchQuery, pageSize, currentPage } });
+    const res = await axios.get(`/api/batches`, { params: { searchQuery, pageSize, currentPage } });
     return res.data || { batches: [], totalPages: 0 };
   } catch (error) {
     console.error('Error fetching batches:', error);
@@ -20,7 +19,7 @@ export const getBatches = async (
 
 export const getBatch = async (id:string) => {
   try {
-    const res = await axios.get(`${API_URL}/api/batches/add-batch`, {
+    const res = await axios.get(`/api/batches/add-batch`, {
       params: { id },
     });
     if (res.status === 200) {
@@ -33,7 +32,7 @@ export const getBatch = async (id:string) => {
 
 export const addBatch = async (formData:FormData) => {
   try {
-    const res = await axios.post(`${API_URL}/api/batches/add-batch`, formData);
+    const res = await axios.post(`/api/batches/add-batch`, formData);
     if (res.status === 200) {
       return res.data;
     }
@@ -45,7 +44,7 @@ export const addBatch = async (formData:FormData) => {
 export const updateBatch = async (formData:FormData) => {
   console.log(formData.get("medicineId"), formData.get("supplierId"));
   try {
-    const res = await axios.put(`${API_URL}/api/batches/add-batch`, formData);
+    const res = await axios.put(`/api/batches/add-batch`, formData);
     if (res.status === 200) {
       return res.data;
     }
@@ -56,7 +55,7 @@ export const updateBatch = async (formData:FormData) => {
 
 export const deleteBatch = async (id:any) => {
   try {
-    const res = await axios.delete(`${API_URL}/api/batches/add-batch`, {
+    const res = await axios.delete(`/api/batches/add-batch`, {
       params: { id },
     });
     if (res.status === 200) {
@@ -69,7 +68,7 @@ export const deleteBatch = async (id:any) => {
 
 export const addNewSupplier = async ({ name, address, mobileNumber }:any) => {
   try {
-    const res = await axios.post(`${API_URL}/api/batches/suppliers`, {
+    const res = await axios.post(`/api/batches/suppliers`, {
       name,
       address,
       mobileNumber,
@@ -82,7 +81,7 @@ export const addNewSupplier = async ({ name, address, mobileNumber }:any) => {
 
 export const getAllSuppliers = async ({ page = "1", search = "" }) => {
   try {
-    const res = await axios.get(`${API_URL}/api/batches/suppliers`, {
+    const res = await axios.get(`/api/batches/suppliers`, {
       params: { page, search },
     });
     if (res.status === 200) {
@@ -95,7 +94,7 @@ export const getAllSuppliers = async ({ page = "1", search = "" }) => {
 
 export const getSupplierById = async (id:string) => {
   try {
-    const res = await axios.get(`${API_URL}/api/batches/suppliers/supplier`, {
+    const res = await axios.get(`/api/batches/suppliers/supplier`, {
       params: { id },
     });
     if (res.status === 200) {
@@ -108,7 +107,7 @@ export const getSupplierById = async (id:string) => {
 
 export const updateSupplier = async (id:string, { address, mobileNumber, name }:any) => {
   try {
-    const res = await axios.put(`${API_URL}/api/batches/suppliers/supplier`, {
+    const res = await axios.put(`/api/batches/suppliers/supplier`, {
       id,
       address,
       name,
@@ -124,7 +123,7 @@ export const updateSupplier = async (id:string, { address, mobileNumber, name }:
 
 export const deleteSupplier = async (id:string) => {
   try {
-    const res = await axios.delete(`${API_URL}/api/batches/suppliers/supplier`, {
+    const res = await axios.delete(`/api/batches/suppliers/supplier`, {
       params: { id },
     });
     if (res.status === 200) {
