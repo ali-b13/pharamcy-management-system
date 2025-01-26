@@ -3,12 +3,13 @@ import React from 'react';
 interface NumberInputProps {
   label: string;
   name: string;
+  className?:string
   value: number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const NumberInput: React.FC<NumberInputProps> = ({ label, name, value, onChange }) => (
-  <div className='mt-1'>
+const NumberInput: React.FC<NumberInputProps> = ({ label, name, value, onChange,className }) => (
+  <div className={`mt-1 ${className&&className}`}>
     <label className="block text-sm md:text-lg font-medium text-gray-700">{label}</label>
     <input
       type="number"

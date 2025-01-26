@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface TextInputProps {
+  className?:string
   label: string;
   name: string;
   placeholder?:string
@@ -8,8 +9,8 @@ interface TextInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ label, name, value, onChange,placeholder }) => (
-  <div className='mt-1'>
+const TextInput: React.FC<TextInputProps> = ({ label, name, value, onChange,placeholder ,className}) => (
+  <div className={`mt-1 ${className&&className}`}>
     <label className="block text-sm md:text-lg font-medium text-gray-700">{label}</label>
     <input
       type="text"

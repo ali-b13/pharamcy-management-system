@@ -2,6 +2,7 @@
 import React from 'react';
 
 interface FilterSelectProps {
+  className?:string
   options:{
     name:string;
     id:string
@@ -11,12 +12,12 @@ interface FilterSelectProps {
   label:string
 }
 
-const SelectFilter: React.FC<FilterSelectProps> = ({ value, onChange,options ,label}) => {
+const SelectFilter: React.FC<FilterSelectProps> = ({ value, onChange,options ,label,className}) => {
   return (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full p-3 border border-gray-300 rounded-md"
+      className={`w-full p-3 border border-gray-300 rounded-md ${className&&className}`}
     >
         <option value="">{label}</option>
         {options.length?options.map(option=>{

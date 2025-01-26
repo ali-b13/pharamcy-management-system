@@ -20,7 +20,7 @@ const OverviewMedicines =() => {
     fetchData()
   },[])
   return (
-    <div className='w-full md:w-2/4 flex flex-col gap-4 justify-center'> 
+    <div className='w-full md:w-2/4 flex flex-col gap-4 '> 
      <WarningMedicines medicines={warnItems||[]}/>
      <ExpiredMedicines medicines={expiredItems||[]}/>
     </div>

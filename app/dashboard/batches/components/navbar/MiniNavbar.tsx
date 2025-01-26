@@ -28,9 +28,9 @@ const MiniNavbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <div className="p-4 bg-gray-100 rounded-lg shadow-md flex flex-col md:flex-row items-center gap-4">
-      <Link className='bg-green-500 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-green-900' href={'/dashboard/batches/add-batch'}> اضافة دفعه </Link>
-      <Link className='bg-blue-900 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-blue-500' href={'/dashboard/batches/add-supplier'}> اضافة  مورد </Link>
+    <div className="p-4 bg-gray-100 rounded-lg shadow-md flex flex-col md:flex-row items-center gap-4 ">
+      <Link className='bg-green-500 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-green-900 transition-all duration-500' href={'/dashboard/batches/add-batch'}> اضافة دفعه </Link>
+      <Link className='bg-blue-900 text-center text-sm lg:text-md text-white p-3 rounded-lg w-2/4 hover:bg-blue-500 transition-all duration-500' href={'/dashboard/batches/add-supplier'}> اضافة  مورد </Link>
       <>
         <TextInputWithoutLabel
           name="BatchNumber"
@@ -60,6 +60,7 @@ const MiniNavbar: React.FC<NavbarProps> = ({
         />
       </>
       <PrimaryButton
+      
         label='ابحث'
         className='w-full md:w-2/4 mt-2 md:mt-0 px-4 py-2 bg-teal-500 text-white rounded-md hover:bg-teal-700 transition duration-300'
         onClick={handleSearchSubmit}

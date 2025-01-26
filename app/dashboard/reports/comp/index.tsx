@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -6,7 +6,7 @@ import SelectFilter from '@/components/inputs/SelectFilter';
 import { getInventoryReport, getLowStockReport, getSalesReport } from '@/app/actions/report/queries';
 import { exportToExcel } from '@/utils/excel/format';
 import { exportToPDF } from '@/utils/pdf/format';
-import Loading from '@/components/LoadingSpinner'; // Assuming you have a loading component
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const ReportsPage = () => {
   const [salesReport, setSalesReport] = useState([]);
@@ -85,7 +85,7 @@ const ReportsPage = () => {
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+      <div className="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-gray-100">
         <h1 className="text-3xl font-bold mb-8 text-teal-800">إصدار التقارير</h1>
 
         <div className="mb-6">
@@ -94,6 +94,7 @@ const ReportsPage = () => {
             options={reportOptions}
             value={reportType}
             onChange={setReportType}
+            className="w-full"
           />
         </div>
 
@@ -105,6 +106,7 @@ const ReportsPage = () => {
                 options={timeFrameOptions}
                 value={timeFrame}
                 onChange={setTimeFrame}
+                className="w-full"
               />
             </div>
             <div className="mb-6">
@@ -114,7 +116,7 @@ const ReportsPage = () => {
               <DatePicker
                 selected={startDate}
                 onChange={(date) => setStartDate(date as Date)}
-                className="w-full p-3 border border-gray-300 rounded-lg"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
             <div className="mb-6">
@@ -124,7 +126,7 @@ const ReportsPage = () => {
               <DatePicker
                 selected={endDate}
                 onChange={(date) => setEndDate(date as Date)}
-                className="w-full p-3 border border-gray-300 rounded-lg"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
           </>
@@ -137,6 +139,7 @@ const ReportsPage = () => {
               options={inventoryOptions}
               value={timeFrame}
               onChange={setTimeFrame}
+              className="w-full"
             />
           </div>
         )}
@@ -148,6 +151,7 @@ const ReportsPage = () => {
               options={lowStockOptions}
               value={timeFrame}
               onChange={setTimeFrame}
+              className="w-full"
             />
           </div>
         )}
@@ -156,11 +160,11 @@ const ReportsPage = () => {
           <button
             onClick={fetchReport}
             disabled={!timeFrame || isLoading}
-            className={`w-full flex items-center justify-center bg-teal-600 text-white p-4 rounded-lg font-semibold hover:bg-teal-700 transition duration-200 ${
+            className={`w-full flex items-center justify-center gap-2 bg-teal-600 text-white p-4 rounded-lg font-semibold hover:bg-teal-700 transition duration-200 ${
               !timeFrame || isLoading ? 'cursor-not-allowed opacity-50' : ''
             }`}
           >
-            {isLoading ? <Loading /> : 'استخراج'}
+            {isLoading ? <LoadingSpinner /> : 'استخراج'}
           </button>
         )}
 
@@ -170,14 +174,14 @@ const ReportsPage = () => {
               {reportType === 'sales' && (
                 <>
                   <button
-                    onClick={() => exportToPDF({reportType:'sales',reportData: salesReport, totalSold, totalPrice, totalProfit})}
-                    className="w-full bg-red-500 text-white p-4 rounded-lg font-semibold hover:bg-red-600 transition duration-200"
+                    onClick={() => exportToPDF({ reportType: 'sales', reportData: salesReport, totalSold, totalPrice, totalProfit })}
+                    className="w-full flex items-center justify-center gap-2 bg-red-500 text-white p-4 rounded-lg font-semibold hover:bg-red-600 transition duration-200"
                   >
                     تحميل تقرير المبيعات PDF
                   </button>
                   <button
                     onClick={() => exportToExcel('sales', salesReport)}
-                    className="w-full bg-green-500 text-white p-4 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
+                    className="w-full flex items-center justify-center gap-2 bg-green-500 text-white p-4 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
                   >
                     تحميل تقرير المبيعات EXCEL
                   </button>
@@ -187,14 +191,14 @@ const ReportsPage = () => {
               {reportType === 'inventory' && (
                 <>
                   <button
-                    onClick={() => exportToPDF({reportType:'inventory', reportData:inventoryReport})}
-                    className="w-full bg-red-500 text-white p-4 rounded-lg font-semibold hover:bg-red-600 transition duration-200"
+                    onClick={() => exportToPDF({ reportType: 'inventory', reportData: inventoryReport })}
+                    className="w-full flex items-center justify-center gap-2 bg-red-500 text-white p-4 rounded-lg font-semibold hover:bg-red-600 transition duration-200"
                   >
                     تحميل تقرير المخزون PDF
                   </button>
                   <button
                     onClick={() => exportToExcel('inventory', inventoryReport)}
-                    className="w-full bg-green-500 text-white p-4 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
+                    className="w-full flex items-center justify-center gap-2 bg-green-500 text-white p-4 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
                   >
                     تحميل تقرير المخزون EXCEL
                   </button>
@@ -204,14 +208,14 @@ const ReportsPage = () => {
               {reportType === 'lowStock' && (
                 <>
                   <button
-                    onClick={() => exportToPDF({reportType:'lowStock', reportData:lowStockReport})}
-                    className="w-full bg-red-500 text-white p-4 rounded-lg font-semibold hover:bg-red-600 transition duration-200"
+                    onClick={() => exportToPDF({ reportType: 'lowStock', reportData: lowStockReport })}
+                    className="w-full flex items-center justify-center gap-2 bg-red-500 text-white p-4 rounded-lg font-semibold hover:bg-red-600 transition duration-200"
                   >
                     تحميل تقرير المخزون المنخفض PDF
                   </button>
                   <button
                     onClick={() => exportToExcel('lowStock', lowStockReport)}
-                    className="w-full bg-green-500 text-white p-4 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
+                    className="w-full flex items-center justify-center gap-2 bg-green-500 text-white p-4 rounded-lg font-semibold hover:bg-green-600 transition duration-200"
                   >
                     تحميل تقرير المخزون المنخفض EXCEL
                   </button>

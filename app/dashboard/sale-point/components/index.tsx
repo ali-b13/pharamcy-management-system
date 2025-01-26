@@ -18,6 +18,18 @@ interface CartItem {
   salePrice: number;
 }
 
+const ProcessingOverlay = () => {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg flex flex-col items-center space-y-4 animate-pulse">
+        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        <h3 className="text-xl font-semibold text-gray-700">جاري معالجة طلبك</h3>
+        <p className="text-gray-500">الرجاء الانتظار...</p>
+      </div>
+    </div>
+  );
+};
+
 const POS: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchResults, setSearchResults] = useState<MedicineType[]>([]);
@@ -26,10 +38,10 @@ const POS: React.FC = () => {
   const [amountReceived, setAmountReceived] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
-
+  const [isProcessing, setIsProcessing] = useState(false);
   const [showMessage, setShowMessage] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [successOrder,setSuccessOrder]=useState(false)
+  const [successOrder, setSuccessOrder] = useState(false);
 
   const handleSearchChange = async (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -37,22 +49,21 @@ const POS: React.FC = () => {
   };
 
   const handleSearch = async (term: string) => {
-    setHasSearched(true)
-    setIsLoading(true)
-    if(!term.length){
-      setSearchResults([]) 
-      setHasSearched(false)
-      setIsLoading(false)
-      return
-    } 
-      
+    setHasSearched(true);
+    setIsLoading(true);
+    if (!term.length) {
+      setSearchResults([]);
+      setHasSearched(false);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const response = await getMedicines(term, 1, 5);
       setSearchResults(response.medicines);
-      setIsLoading(false)
-
+      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false)
+      setIsLoading(false);
       console.error('Error fetching search results:', error);
     }
   };
@@ -60,24 +71,21 @@ const POS: React.FC = () => {
   const handleAddToCart = (medicineId: string) => {
     const medicine = searchResults.find((med) => med.id === medicineId);
     if (medicine && medicine.batches?.length > 0) {
-      // Get current date
       const currentDate = new Date();
-  
-      // Filter out expired batches and sort the remaining ones
       const sortedBatches = medicine.batches
-        .map(batch => ({
+        .map((batch) => ({
           ...batch,
-          expiryDate: new Date(batch.expiryDate)
+          expiryDate: new Date(batch.expiryDate),
         }))
-        .filter(batch => batch.expiryDate > currentDate) // Filter out expired batches
+        .filter((batch) => batch.expiryDate > currentDate)
         .sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime());
-  
-      // Find the first batch with available quantity
-      const validBatch = sortedBatches.find(batch => batch.quantity > 0);
-  
+
+      const validBatch = sortedBatches.find((batch) => batch.quantity > 0);
+
       if (validBatch) {
-        const existingItemIndex = cart.findIndex(item => item.batchId === validBatch.batchId);
-  
+        const existingItemIndex = cart.findIndex(
+          (item) => item.batchId === validBatch.batchId
+        );
         if (existingItemIndex >= 0) {
           handleQuantityChange(existingItemIndex, cart[existingItemIndex].quantity + 1);
         } else {
@@ -90,60 +98,62 @@ const POS: React.FC = () => {
             availableQuantity: validBatch.quantity,
             supplierId: validBatch.supplierId,
             salePrice: medicine.price,
-            totalPrice: medicine.price // Calculate the price for a single item
+            totalPrice: medicine.price,
           };
-          setCart(prevCart => [...prevCart, newItem]);
+          setCart((prevCart) => [...prevCart, newItem]);
         }
       } else {
-        setShowMessage(true); // No batches with available quantity
+        setShowMessage(true);
       }
     } else {
-      setShowMessage(true); // No batches available
+      setShowMessage(true);
     }
   };
-  
 
   const handleQuantityChange = (index: number, newQuantity: number) => {
-    setCart(prevCart => {
+    setCart((prevCart) => {
       const updatedCart = [...prevCart];
       const item = updatedCart[index];
-
       if (newQuantity <= item.availableQuantity && newQuantity >= 0) {
         if (newQuantity === 0) {
-          updatedCart.splice(index, 1); // Remove item if quantity is zero
+          updatedCart.splice(index, 1);
         } else {
           item.quantity = newQuantity;
         }
       }
-
       return updatedCart;
     });
   };
 
   useEffect(() => {
-    const newTotalPrice = cart.reduce((total, item) => total + item.quantity * item.salePrice, 0);
+    const newTotalPrice = cart.reduce(
+      (total, item) => total + item.quantity * item.salePrice,
+      0
+    );
     setTotalPrice(newTotalPrice);
   }, [cart]);
 
-  const handlePayment = async (paymentMethod:string,buyerName?: string, buyerPhone?: string) => {
+  const handlePayment = async (paymentMethod: string, buyerName?: string, buyerPhone?: string) => {
     try {
+      setIsProcessing(true);
       const orderDetails = {
-        cart, 
-        paymentMethod, 
-        ...(paymentMethod === "DEBT" && { buyerName, buyerPhone }) // Add buyer details only if DEBT
+        cart,
+        paymentMethod,
+        ...(paymentMethod === "DEBT" && { buyerName, buyerPhone }),
       };
-      const response = await placeOrder(orderDetails)
-      if(response.success){
-        setSuccessOrder(true)
-          setCart([]); // Reset after successful sale
-          setTotalPrice(0);
-          setAmountReceived(0);
-      }else {
-         setShowError(true)
+      const response = await placeOrder(orderDetails);
+      if (response.success) {
+        setSuccessOrder(true);
+        setCart([]);
+        setTotalPrice(0);
+        setAmountReceived(0);
+      } else {
+        setShowError(true);
       }
     } catch (error) {
-        setShowError(true)
-
+      setShowError(true);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -152,8 +162,8 @@ const POS: React.FC = () => {
       <div className="container mx-auto">
         <div className="grid md:grid-cols-3 gap-6">
           <SearchComponent
-          hasSearched={hasSearched}
-          isLoading={isLoading}
+            hasSearched={hasSearched}
+            isLoading={isLoading}
             searchTerm={searchTerm}
             searchResults={searchResults}
             onSearchChange={handleSearchChange}
@@ -170,33 +180,35 @@ const POS: React.FC = () => {
           />
         </div>
       </div>
+
       {showMessage && (
         <AlertBox
-          type='warning'
-          title='لا دفعات موجودة'
+          type="warning"
+          title="لا دفعات موجودة"
           show={showMessage}
           onCancel={() => setShowMessage(false)}
-          message='لا توجد دفعات لهاذا الدواء او نفذت الكمية'
+          message="لا توجد دفعات لهاذا الدواء او نفذت الكمية"
         />
       )}
       {showError && (
         <AlertBox
-          type='error'
-          title='خطاء '
+          type="error"
+          title="خطاء "
           show={showError}
           onCancel={() => setShowError(false)}
-          message='تعذر استكمال الطلب'
+          message="تعذر استكمال الطلب"
         />
       )}
-         {successOrder && (
+      {successOrder && (
         <AlertBox
-          type='success'
-          title='الطلب استكمل بنجاح '
+          type="success"
+          title="الطلب استكمل بنجاح "
           show={successOrder}
           onCancel={() => setSuccessOrder(false)}
-          message='تم استكمال طلبك بنجاح '
+          message="تم استكمال طلبك بنجاح "
         />
       )}
+      {isProcessing && <ProcessingOverlay />}
     </div>
   );
 };

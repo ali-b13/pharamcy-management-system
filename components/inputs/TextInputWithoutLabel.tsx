@@ -2,13 +2,14 @@ import React from 'react';
 
 interface TextInputProps {
   name: string;
+  className?:string
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder:string
 }
 
-const TextInputWithoutLabel: React.FC<TextInputProps> = ({  name, value, onChange,placeholder }) => (
-  <div className='mt-1 w-full'>
+const TextInputWithoutLabel: React.FC<TextInputProps> = ({  name, value, onChange,placeholder,className }) => (
+  <div className={`mt-1  ${className}`}>
     <input
       type="text"
       name={name}

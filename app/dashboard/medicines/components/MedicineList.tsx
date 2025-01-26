@@ -15,13 +15,13 @@ const PAGE_SIZE = 7;
 
 interface MedicineProps {
   data: {
-    medicines: MedicineType[],
-    totalPages: number
-  }
+    medicines: MedicineType[];
+    totalPages: number;
+  };
 }
 
 const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages } }) => {
-  const router =useRouter()
+  const router = useRouter();
   const [medicineData, setMedicines] = useState<MedicineType[]>(medicines);
   const [currentPage, setCurrentPage] = useState(1);
   const [overAllPages, setTotalPages] = useState(totalPages);
@@ -30,13 +30,13 @@ const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages }
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedMedicine, setSelectedMedicine] = useState<string | null>(null);
+
   const fetchMedicines = useCallback(async (query: string, page: number) => {
-    console.log("will call api")
     setLoading(true);
     setError(null);
     try {
       const data = await getMedicines(query, page, PAGE_SIZE);
-      setMedicines(data.medicines.length?data.medicines:[]);
+      setMedicines(data.medicines.length ? data.medicines : []);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error('Error fetching medicines:', error);
@@ -60,18 +60,19 @@ const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages }
   };
 
   const handleEdit = (id: string) => {
-    router.push(`/dashboard/medicines/edit/${id}`)
-    
+    router.push(`/dashboard/medicines/edit/${id}`);
   };
+
   const handleDelete = async (id: string) => {
     setSelectedMedicine(id);
     setShowModal(true);
   };
+
   const confirmDelete = async () => {
     if (selectedMedicine) {
       try {
-        await deleteMedicine(selectedMedicine)
-        fetchMedicines(searchQuery,1)
+        await deleteMedicine(selectedMedicine);
+        fetchMedicines(searchQuery, 1);
         setShowModal(false);
       } catch (error) {
         console.error('Error deleting medicine:', error);
@@ -120,14 +121,20 @@ const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages }
     </div>
   );
 
-
   return (
-    <div className="container md:mx-auto md:p-4">
-      <Header title='الادوية'/>
+    <div className="container mx-auto p-4 bg-white rounded-lg shadow-md">
+      <Header title="الادوية" />
 
-      <div className='flex flex-col md:flex-row gap-3 md:items-center border-neutral-400 border-b-2 pb-4'>
-        <SearchBar className="w-full  md:w-2/4" searchQuery={searchQuery} setSearchQuery={handleSearchChange} />
-        <Link className='w-1/3 bg-teal-500 text-center text-white p-1 md:p-2 rounded-lg hover:bg-teal-700 hover:transition-all duration-200' href={'/dashboard/medicines/add-medicine'}>
+      <div className="flex flex-col md:flex-row gap-3 md:items-center border-b-2 border-neutral-200 pb-4">
+        <SearchBar
+          className="w-full md:w-2/4"
+          searchQuery={searchQuery}
+          setSearchQuery={handleSearchChange}
+        />
+        <Link
+          href="/dashboard/medicines/add-medicine"
+          className="w-1/3 bg-teal-500 text-white text-center p-2 rounded-lg hover:bg-teal-600 transition-all duration-200"
+        >
           اضافه دواء جديد
         </Link>
       </div>
@@ -136,21 +143,25 @@ const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages }
         <SkeletonLoader />
       ) : (
         <>
-          {error && <p className="text-red-500">{error}</p>}
+          {error && <p className="text-red-500 text-center mt-4">{error}</p>}
 
-          <ul className='m-2'>
-            {medicineData?.length ? medicineData.map(medicine => (
-              <MedicineItem
-                key={medicine.id}
-                id={medicine.id}
-                brand={medicine.brand}
-                name={medicine.name}
-                dosageForm={medicine.dosageForm}
-                price={medicine.price}
-                onDelete={handleDelete}
-                onEdit={handleEdit}
-              />
-            )) : <div className="text-center py-8 text-gray-500">لاتوجد نتائج</div>}
+          <ul className="mt-4 space-y-4">
+            {medicineData?.length ? (
+              medicineData.map((medicine) => (
+                <MedicineItem
+                  key={medicine.id}
+                  id={medicine.id}
+                  brand={medicine.brand}
+                  name={medicine.name}
+                  dosageForm={medicine.dosageForm}
+                  price={medicine.price}
+                  onDelete={handleDelete}
+                  onEdit={handleEdit}
+                />
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">لا توجد نتائج</div>
+            )}
           </ul>
 
           {medicineData && medicineData.length > 0 && (

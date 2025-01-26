@@ -116,7 +116,7 @@ export const PUT = async (req: NextRequest) => {
         console.log("medicine id",id)
         try {
             const product =await prisma.medicine.findFirst({where:{id:id as string},include:{batches:{include:{supplier:true}}}})
-            const response = NextResponse.json({ product });
+            const response = NextResponse.json({ medicine:product });
             response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
             response.headers.set("Pragma", "no-cache");
             response.headers.set("Expires", "0");
