@@ -89,7 +89,7 @@ const POS: React.FC = () => {
             batchNumber: validBatch.batchNumber,
             quantity: 1,
             availableQuantity: validBatch.quantity,
-            supplierId: validBatch.supplierId,
+            supplierId: validBatch.supplier.id,
             salePrice: medicine.price,
             totalPrice: medicine.price // Calculate the price for a single item
           };
