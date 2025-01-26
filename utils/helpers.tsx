@@ -12,11 +12,11 @@ export const calculateRemainingDays = (expiryDate:Date) => {
 
 
 
-  const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'niceTryDude1001'); // Store this in .env
+const secret = new TextEncoder().encode(process.env.JWT_SECRET); // Use the correct secret format
 
 export const verifyJWT = async (token: string) => {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, secret);
     return payload; // Return the decoded payload
   } catch (error) {
     console.error('JWT verification error:', error);
