@@ -31,8 +31,8 @@ export async function middleware(req: NextRequest) {
 
       try {
         await verifyJWT(token);
-        url.pathname = '/dashboard';
-        return NextResponse.redirect(url);
+        const redirectUrl = `${req.nextUrl.origin}/dashboard`;
+        return NextResponse.redirect(redirectUrl);
       } catch {
         return NextResponse.next();
       }
@@ -40,15 +40,16 @@ export async function middleware(req: NextRequest) {
 
     if (url.pathname.startsWith('/dashboard')) {
       if (!token) {
-        url.pathname = '/auth/login';
-        return NextResponse.redirect(url);
+        const redirectUrl = `${req.nextUrl.origin}/auth/login`;
+        return NextResponse.redirect(redirectUrl);
       }
 
       try {
         await verifyJWT(token);
         return NextResponse.next();
       } catch {
-        const response = NextResponse.redirect('/auth/login');
+        const redirectUrl = `${req.nextUrl.origin}/auth/login`;
+        const response = NextResponse.redirect(redirectUrl);
         response.cookies.delete('token');
         return response;
       }
