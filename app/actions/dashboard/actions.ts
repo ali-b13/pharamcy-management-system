@@ -6,7 +6,7 @@ const API_URL = process.env.NEXTAUTH_URL;
 export const getSatasticsData=async()=>{
     try {
         const res=await axios.get(`/api/dashboard/statistics`)
-        if(res.status==200){
+        if(res.status==200 || res.status==305){
             
             return res.data.statistics||[]
         }

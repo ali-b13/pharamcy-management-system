@@ -24,8 +24,11 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const salesResponse = await getSalesData();
-      const statsResponse = await getSatasticsData();
+      console.log('Sales Data:', salesResponse);
       
+      const statsResponse = await getSatasticsData();
+      console.log('Statistics Data:', statsResponse);
+  
       setSalesData(salesResponse || []);
       setStatistics({
         totalSoldProducts: statsResponse?.totalSoldProducts ?? 0,
@@ -39,6 +42,7 @@ const Dashboard = () => {
       console.error('Error fetching dashboard data:', error);
     }
   };
+  
 
   useEffect(() => {
     fetchData();
