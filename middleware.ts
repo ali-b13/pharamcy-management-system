@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
     const url = req.nextUrl.clone();
     const token = req.cookies.get('token')?.value;
 
+    // Handle API routes
     if (url.pathname.startsWith('/api')) {
       if (API_PUBLIC_ROUTES.some((route) => url.pathname.startsWith(route))) {
         return NextResponse.next();
@@ -26,6 +27,7 @@ export async function middleware(req: NextRequest) {
       }
     }
 
+    // Handle public routes (auth pages)
     if (PUBLIC_ROUTES.includes(url.pathname)) {
       if (!token) return NextResponse.next();
 
@@ -38,6 +40,26 @@ export async function middleware(req: NextRequest) {
       }
     }
 
+    // Handle root route (/)
+    if (url.pathname === '/') {
+      if (!token) {
+        const redirectUrl = `${req.nextUrl.origin}/auth/login`;
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      try {
+        await verifyJWT(token);
+        const redirectUrl = `${req.nextUrl.origin}/dashboard`;
+        return NextResponse.redirect(redirectUrl);
+      } catch {
+        const redirectUrl = `${req.nextUrl.origin}/auth/login`;
+        const response = NextResponse.redirect(redirectUrl);
+        response.cookies.delete('token');
+        return response;
+      }
+    }
+
+    // Handle dashboard routes
     if (url.pathname.startsWith('/dashboard')) {
       if (!token) {
         const redirectUrl = `${req.nextUrl.origin}/auth/login`;
@@ -55,6 +77,7 @@ export async function middleware(req: NextRequest) {
       }
     }
 
+    // Default case (allow the request to proceed)
     return NextResponse.next();
   } catch (error) {
     console.error('Middleware error:', error);
