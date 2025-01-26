@@ -32,13 +32,13 @@ export const addNewMedicine=async(form:FormData)=>{
 export const getMedicine=async(id:string)=>{
  try {
      const res =await axios.get(`/api/medicine/one-medicine`,{params:{id:id}})
-     if(res.status==200){
+     if(res){
         return {error:false,success:true,medicine:res.data.medicine}
      }else{
-      return {error:true,success:false}
+      return {error:true,success:false,res}
      }
  } catch (error) {
-     return {error:true,success:false}
+     return {error:error,success:false,not:"not resp"}
  }
 }
 

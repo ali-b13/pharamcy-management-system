@@ -3,52 +3,86 @@ import path from "path";
 import fs from "fs";
 import prisma from '@/utils/prismaDB'
 import { revalidatePath } from "next/cache";
-
 const UPLOAD_DIR = path.resolve(process.env.ROOT_PATH ?? "", "public/uploads");
 
 export const PUT = async (req: NextRequest) => {
   const formData = await req.formData();
   const body = Object.fromEntries(formData);
-  const id = body.id as string;
-  const name = body.name as string;
-  const price = Number(body.price) as number;
-  const basePrice = Number(body.basePrice) as number;
-  const dosageForm = body.dosageForm as string;
-  const brand = body.brand as string;
+  
+  // Validate required fields
+  if (!body.id || !body.name || !body.price || !body.basePrice || !body.dosageForm || !body.brand) {
+    return NextResponse.json(
+      { success: false, error: "جميع الحقول المطلوبة يجب أن تكون موجودة", message: null },
+      { status: 400 }
+    );
+  }
 
   try {
-    // Fetch the existing product to get the current image
+    // Type casting with validation
+    const id = String(body.id);
+    const name = String(body.name);
+    const price = Number(body.price);
+    const basePrice = Number(body.basePrice);
+    const dosageForm = String(body.dosageForm);
+    const brand = String(body.brand);
+
     const existingProduct = await prisma.medicine.findUnique({ where: { id } });
 
     if (!existingProduct) {
-      return NextResponse.json({ success: false, error: "الدواء غير موجود", message: null }, { status: 404 });
+      return NextResponse.json(
+        { success: false, error: "الدواء غير موجود", message: null },
+        { status: 404 }
+      );
     }
 
-    // Handling file upload
-    const file = body.image as Blob || null;
-    let filePath;
-    if (file) {
-      filePath = Date.now() + "-" + (body.image as File).name;
-      const buffer = Buffer.from(await file.arrayBuffer());
-      if (!fs.existsSync(UPLOAD_DIR)) {
-        fs.mkdirSync(UPLOAD_DIR);
-      }
-      fs.writeFileSync(path.resolve(UPLOAD_DIR, filePath), buffer);
+    // Proper file type handling
+    let filePath = existingProduct.image;
+    const file = body.image;
 
-      // Delete the old image if a new one is uploaded
+    if (file && file instanceof File) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        return NextResponse.json(
+          { success: false, error: "يجب أن يكون الملف المرفوع صورة", message: null },
+          { status: 400 }
+        );
+      }
+
+      // Generate safe filename
+      filePath = `${Date.now()}-${file.name.replace(/[^a-z0-9.]/gi, '_')}`;
+      const buffer = Buffer.from(await file.arrayBuffer());
+      
+      // Ensure upload directory exists
+      if (!fs.existsSync(UPLOAD_DIR)) {
+        fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+      }
+
+      // Write file with error handling
+      try {
+        fs.writeFileSync(path.join(UPLOAD_DIR, filePath), buffer as any);
+      } catch (writeError) {
+        console.error('File write error:', writeError);
+        return NextResponse.json(
+          { success: false, error: "فشل في حفظ الصورة", message: null },
+          { status: 500 }
+        );
+      }
+
+      // Clean up old image
       if (existingProduct.image) {
-        const oldImagePath = path.resolve(UPLOAD_DIR, existingProduct.image);
+        const oldImagePath = path.join(UPLOAD_DIR, existingProduct.image);
         if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+          try {
+            fs.unlinkSync(oldImagePath);
+          } catch (unlinkError) {
+            console.error('Old image deletion error:', unlinkError);
+          }
         }
       }
-    } else {
-      // Keep the old image if no new image is provided
-      filePath = existingProduct.image;
     }
 
-    // Update the product in the database
-    await prisma.medicine.update({
+    // Update database entry
+    const updatedProduct = await prisma.medicine.update({
       where: { id },
       data: {
         name,
@@ -56,22 +90,32 @@ export const PUT = async (req: NextRequest) => {
         dosageForm,
         brand,
         image: filePath,
-        basePrice:basePrice
+        basePrice
       },
     });
 
     revalidatePath('/medicines');
 
-    return NextResponse.json({ success: true, error: null, message: "Updated successfully" });
+    return NextResponse.json({
+      success: true,
+      error: null,
+      message: "تم التحديث بنجاح",
+      data: updatedProduct
+    });
+
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ success: false, error: "خطاء غير متوقع,اعد المحاوله لاحقا", message: null }, { status: 500 });
+    console.error('Server error:', error);
+    return NextResponse.json(
+      { success: false, error: "خطأ غير متوقع، يرجى المحاولة لاحقًا", message: null },
+      { status: 500 }
+    );
   }
 };
     export const GET =async(req:NextRequest)=>{
         const id= req.nextUrl.searchParams.get('id')
+        console.log("medicine id",id)
         try {
-            const product =await prisma.medicine.findFirst({where:{id:id as string},include:{batches:true}})
+            const product =await prisma.medicine.findFirst({where:{id:id as string},include:{batches:{include:{supplier:true}}}})
             return NextResponse.json({message:"fetched successfully",medicine:product},{status:200})
         } catch (error) {
             return NextResponse.json({message:"fetched successfully",medicine:null,error:"الدواء غير موجود"},{status:404})

@@ -86,46 +86,85 @@ const MedicineList: React.FC<MedicineProps> = ({ data: { medicines, totalPages }
     setSelectedMedicine(null);
   };
 
+  const SkeletonLoader = () => (
+    <div className="animate-pulse space-y-4">
+      {/* Search and Add Button Skeleton */}
+      <div className="flex flex-col md:flex-row gap-3 md:items-center border-neutral-400 border-b-2 pb-4">
+        <div className="w-full md:w-2/4 h-12 bg-gradient-to-r from-teal-50 to-teal-100 rounded-lg"></div>
+        <div className="w-1/3 h-12 bg-gradient-to-r from-teal-50 to-teal-100 rounded-lg"></div>
+      </div>
+
+      {/* Table Skeleton */}
+      <div className="space-y-4 m-2">
+        {[...Array(PAGE_SIZE)].map((_, index) => (
+          <div key={index} className="bg-gradient-to-r from-teal-50 to-teal-100 p-4 rounded-lg shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-teal-200 rounded w-1/4"></div>
+                <div className="h-4 bg-teal-200 rounded w-1/2"></div>
+              </div>
+              <div className="flex-1 h-4 bg-teal-200 rounded w-1/3"></div>
+              <div className="flex-1 h-4 bg-teal-200 rounded w-1/3"></div>
+              <div className="flex-1 h-4 bg-teal-200 rounded w-1/4"></div>
+              <div className="flex gap-2">
+                <div className="h-8 w-16 bg-teal-300 rounded-lg"></div>
+                <div className="h-8 w-16 bg-teal-300 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination Skeleton */}
+      <div className="h-12 bg-gradient-to-r from-teal-50 to-teal-100 rounded-lg"></div>
+    </div>
+  );
+
 
   return (
     <div className="container md:mx-auto md:p-4">
-     <Header title='الادوية'/>
+      <Header title='الادوية'/>
 
       <div className='flex flex-col md:flex-row gap-3 md:items-center border-neutral-400 border-b-2 pb-4'>
         <SearchBar className="w-full  md:w-2/4" searchQuery={searchQuery} setSearchQuery={handleSearchChange} />
-        <Link className=' w-1/3  bg-teal-500  text-center text-white p-1 md:p-2 rounded-lg hover:bg-teal-700  hover:transition-all duration-200' href={'/dashboard/medicines/add-medicine'}>
+        <Link className='w-1/3 bg-teal-500 text-center text-white p-1 md:p-2 rounded-lg hover:bg-teal-700 hover:transition-all duration-200' href={'/dashboard/medicines/add-medicine'}>
           اضافه دواء جديد
         </Link>
       </div>
 
-      {loading && <p>جاري التحميل...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+      {loading ? (
+        <SkeletonLoader />
+      ) : (
+        <>
+          {error && <p className="text-red-500">{error}</p>}
 
-      <ul className='m-2'>
-        {medicineData?.length ? medicineData.map(medicine => (
-          <MedicineItem
-            key={medicine.id}
-            id={medicine.id}
-            brand={medicine.brand}
-            name={medicine.name}
-            dosageForm={medicine.dosageForm}
-            price={medicine.price}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-          />
-        )):<div>لاتوجد نتائج </div>
-    }
-      </ul>
+          <ul className='m-2'>
+            {medicineData?.length ? medicineData.map(medicine => (
+              <MedicineItem
+                key={medicine.id}
+                id={medicine.id}
+                brand={medicine.brand}
+                name={medicine.name}
+                dosageForm={medicine.dosageForm}
+                price={medicine.price}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+              />
+            )) : <div className="text-center py-8 text-gray-500">لاتوجد نتائج</div>}
+          </ul>
 
-      {medicineData && medicineData.length > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={overAllPages}
-          onPageChange={handlePageChange}
-        />
+          {medicineData && medicineData.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={overAllPages}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </>
       )}
+
       <ModalBox
-      loading={loading}
+        loading={loading}
         show={showModal}
         title="تاكيد حذف الدواء"
         message="هل انت متاكد من حذف هاذا الدواء؟ كل الدفعات والطلبات المتعلقه باسم هاذا الدواء سيتم حذفها معاّ."

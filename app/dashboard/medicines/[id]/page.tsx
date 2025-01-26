@@ -1,15 +1,9 @@
 
-import { getMedicine } from '@/app/actions/medicine/queries';
-import { notFound } from 'next/navigation';
 import ShowFullDetails from '../components/ShowFullDetails';
-
-const editMedicinePage =async ({params}:{params:{id:string}}) => {
-    const {id}=params;
-    const res= await getMedicine(id)
-    if(res.error)return notFound()
+const medicinePage =async ({params}:{params:{id:string}}) => {
   return (
-     <ShowFullDetails medicine={res.medicine}/>
+     <ShowFullDetails id={params.id}/>
   )
 }
 
-export default editMedicinePage
+export default medicinePage

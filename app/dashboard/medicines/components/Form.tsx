@@ -13,13 +13,13 @@ import { MedicineType } from '@/types.dt';
   item?:MedicineType
   label:string
  }
-const MedicineForm: React.FC<FormProps> = ({label,isEditable,item}) => {
+const MedicineForm: React.FC<FormProps> = ({label,isEditable}) => {
   const router = useRouter();
-  const [name, setName] = useState(item?item.name:'');
-  const [brand, setBrand] = useState(item?item.brand:'');
-  const [dosageForm, setDosageForm] = useState(item?item.dosageForm:'');
-  const [price, setPrice] = useState<number>(item?item.price:0);
-  const [basePrice, setBasePrice] = useState<number>(item?item.basePrice:0);
+  const [name, setName] = useState('');
+  const [brand, setBrand] = useState('');
+  const [dosageForm, setDosageForm] = useState('');
+  const [price, setPrice] = useState<number>(0);
+  const [basePrice, setBasePrice] = useState<number>(0);
 
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ const MedicineForm: React.FC<FormProps> = ({label,isEditable,item}) => {
  const [isImageModified,setImageModified]=useState(false)
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!name) newErrors.name = 'Name is required';
+    if (!name) newErrors.name = 'الاسم مطلوب';
     if (!brand) newErrors.brand = 'الشركه مطلوبه';
     if (!dosageForm) newErrors.dosageForm = 'نوع الجرعة مطلوبه';
     if (!basePrice || basePrice <= 0) newErrors.basePrice = 'سعر الشراء مطلوب';
@@ -45,7 +45,6 @@ const MedicineForm: React.FC<FormProps> = ({label,isEditable,item}) => {
 
     setLoading(true);
     const formData = new FormData();
-    formData.append("id",item?.id||"")
     formData.append('name', name);
     formData.append('brand', brand);
     formData.append('dosageForm', dosageForm);
@@ -56,26 +55,15 @@ const MedicineForm: React.FC<FormProps> = ({label,isEditable,item}) => {
     }
 
     try {
-      if(isEditable){
-        const {error,success}= await updateMedicine(formData);
-        console.log(error,success)
-        if(error && !success){
-         setServerError(error)
-        }else {
-          router.push('/medicines');
-         setLoading(false)
-        }
-
-      }else {
+      
       const {error,success}= await addNewMedicine(formData);
      console.log(error,success)
      if(error && !success){
       setServerError(error)
      }else {
-       router.push('/medicines');
+      router.push("/dashboard/medicines");
       setLoading(false)
      }
-      }
       
     } catch (error) {
       console.error('Failed to add medicine', error);

@@ -5,7 +5,7 @@ export const GET =async(req:NextRequest)=>{
     const type =req.nextUrl.searchParams.get("type") as string
 
   let inventoryData;
-
+ console.log(type,'type')
   try {
     if (type === 'valid') {
         inventoryData = await prisma.batch.findMany({
@@ -13,6 +13,7 @@ export const GET =async(req:NextRequest)=>{
             expiryDate: {
               gt: new Date(),
             },
+            
           },
           include:{medicine:true,supplier:true}
         });
@@ -52,6 +53,7 @@ export const GET =async(req:NextRequest)=>{
             supplierName:item.supplier.name
         }
       })
+
   return NextResponse.json({data:formattedData,success:true,error:null},{status:200})    
   } catch (error) {
     return  NextResponse.json({success:false,error:"فشل الاستيراد"},{status:422})    

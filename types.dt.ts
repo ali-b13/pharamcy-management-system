@@ -22,7 +22,7 @@ export interface BatchType {
     expiryDate:Date
     quantity:number
     medicineId:string
-    supplierId:string
+    supplier:SupplierType
     createdAt:Date
 }
 export interface BatchWithMedicineProps {
@@ -41,6 +41,7 @@ export interface BatchWithMedicineProps {
     brand:string,
     dosageForm:string,
     price:number,
+    basePrice:number
     image:string,
     createdAt:Date
     batches:BatchType[]
