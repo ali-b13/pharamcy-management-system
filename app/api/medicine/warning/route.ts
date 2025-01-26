@@ -26,7 +26,12 @@ export const GET = async (req: NextRequest) => {
             take: pageSizeNumber,
         });
 
-        return NextResponse.json({batches:batches||[],success:true,error:null,totalPages:Math.ceil(batches.length / pageSizeNumber)||1},{status:200});
+        const response = NextResponse.json({ batches:batches||[],totalPages:Math.ceil(batches.length / pageSizeNumber)||1,success:true,error:null});
+        response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.headers.set("Pragma", "no-cache");
+        response.headers.set("Expires", "0");
+        return response;
+        
     } catch (error) {
         console.error('Error fetching batches:', error);
         return NextResponse.json({ error: 'An error occurred while fetching batches.' ,success:false}, { status: 500 });

@@ -78,8 +78,11 @@ export const GET = async (req: NextRequest) => {
             });
         }
         
-     
-        return NextResponse.json({salesData:salesData||[]}, { status: 200 });
+        const response = NextResponse.json({ salesData });
+        response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+        response.headers.set("Pragma", "no-cache");
+        response.headers.set("Expires", "0");
+        return response;
         
     } catch (error) {
         console.error(`Error fetching ${timeFrame} sales data:`, error);

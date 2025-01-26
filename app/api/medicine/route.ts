@@ -44,7 +44,7 @@ export const POST = async (req: NextRequest) => {
   
       fs.writeFileSync(
         path.resolve(UPLOAD_DIR,filePath),
-        buffer
+        buffer as any
       );
     } else {
       return NextResponse.json({
@@ -94,10 +94,15 @@ export const GET=async(req:NextRequest)=>{
             include:{batches:true},
             orderBy:{createdAt:"asc"}
           });
-          return   NextResponse.json({
+
+          const response = NextResponse.json({
             medicines,
             totalPages: Math.ceil(totalMedicines / pageSizeNumber),
-          },{status:200});
+          });
+          response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+          response.headers.set("Pragma", "no-cache");
+          response.headers.set("Expires", "0");
+          return response;
        }
        else {
         const totalMedicines = await prisma.medicine.count({
@@ -116,10 +121,15 @@ export const GET=async(req:NextRequest)=>{
             orderBy:{createdAt:"desc"},
             include:{batches:true}
           } );
-         return NextResponse.json({
-            medicines:medicines,
+          const response = NextResponse.json({
+            medicines,
             totalPages: Math.ceil(totalMedicines / pageSizeNumber),
-          },{status:200});
+          });
+          response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate");
+          response.headers.set("Pragma", "no-cache");
+          response.headers.set("Expires", "0");
+          return response;
+
        }
      
   
