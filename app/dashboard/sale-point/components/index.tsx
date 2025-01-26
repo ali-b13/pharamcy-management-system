@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import axios from 'axios';
 import { MedicineType } from '@/types.dt';
 import { getMedicines } from '@/app/actions/medicine/queries';
 import SearchComponent from './Search';
@@ -89,7 +88,7 @@ const POS: React.FC = () => {
             batchNumber: validBatch.batchNumber,
             quantity: 1,
             availableQuantity: validBatch.quantity,
-            supplierId: validBatch.supplier.id,
+            supplierId: validBatch.supplierId,
             salePrice: medicine.price,
             totalPrice: medicine.price // Calculate the price for a single item
           };

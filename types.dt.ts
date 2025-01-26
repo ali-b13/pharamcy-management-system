@@ -9,12 +9,24 @@ export interface MedicineType{
     image:string,
     createdAt:Date
     basePrice : number
-    batches:BatchType[]
+    batches:BatchForMedicine[]
+}
+
+interface BatchForMedicine {
+  batchId:string
+    batchNumber:string
+    expiryDate:Date
+    quantity:number
+    medicineId:string
+    supplierId:string
+    createdAt:Date
 }
 
 export interface MedicineListProps{
     medicines:MedicineType[]
 }
+
+
 
 export interface BatchType {
     batchId:string
