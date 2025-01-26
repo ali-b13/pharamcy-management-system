@@ -57,9 +57,9 @@ export const POST = async (req: NextRequest) => {
           'Set-Cookie': serialize('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 3600, // 1 hour
+            maxAge: 10 * 24 * 60 * 60, // 10 days in seconds
             path: '/',
-            sameSite: 'lax', // Adjust as necessary
+            sameSite: 'lax',
           }),
           'Content-Type': 'application/json',
         },

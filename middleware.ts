@@ -1,82 +1,72 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJWT } from './utils/helpers';
 
-export const middleware = async (req: NextRequest) => {
+const PUBLIC_ROUTES = ['/auth/login', '/auth/register']; // Publicly accessible routes
+const API_PUBLIC_ROUTES = ['/api/auth/login', '/api/auth/register']; // Publicly accessible API routes
+
+export async function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
   const token = req.cookies.get('token')?.value;
-  const loginUrl = new URL('/auth/login', req.url);
-  const dashboardUrl = new URL('/dashboard', req.url);
 
-  // Define public routes
-  const publicPages = ['/auth/login', '/auth/register'];
-  const publicAPIs = ['/api/auth/login', '/api/auth/register'];
-  const publicRoutes = [...publicPages, ...publicAPIs];
-  
-  const currentPath = req.nextUrl.pathname;
+  const isApiRequest = url.pathname.startsWith('/api');
+  const isPublicRoute = PUBLIC_ROUTES.includes(url.pathname);
+  const isPublicApiRoute = API_PUBLIC_ROUTES.some((route) => url.pathname.startsWith(route));
+  const isProtectedRoute = ['/dashboard', '/'].some((route) => url.pathname === route || url.pathname.startsWith(`${route}/`));
 
-  // Check if current path is a public route
-  if (publicRoutes.includes(currentPath)) {
-    if (publicPages.includes(currentPath)) {
-      // Handle public page routes
-      if (token) {
-        try {
-          await verifyJWT(token);
-          // Valid token, redirect to dashboard
-          return NextResponse.redirect(dashboardUrl);
-        } catch (error) {
-          // Invalid token, clear and proceed
-          const response = NextResponse.next();
-          response.cookies.delete('token');
-          return response;
-        }
-      }
-      // No token, proceed to the public page
-      return NextResponse.next();
-    } else {
-      // Handle public API routes: allow without token
-      return NextResponse.next();
+  // API Requests Handling
+  if (isApiRequest) {
+    if (isPublicApiRoute) {
+      return NextResponse.next(); // Allow public APIs
+    }
+
+    if (!token) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 }); // Block protected APIs
+    }
+
+    try {
+      await verifyJWT(token);
+      return NextResponse.next(); // Allow protected APIs with valid token
+    } catch {
+      return NextResponse.json({ message: 'Invalid Token' }, { status: 401 });
     }
   }
 
-  // Handle protected routes (both page and API)
-  try {
-    if (!token) throw new Error('No token found');
-    
-    // Verify token
-    const decoded = await verifyJWT(token);
-    
-    // Add user data to headers
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set('x-user-id', decoded.id as string);
-    requestHeaders.set('x-user-role', decoded.role as string);
+  // Public Route Handling
+  if (isPublicRoute) {
+    if (!token) {
+      return NextResponse.next(); // Allow public routes when not logged in
+    }
 
-    // Continue request with new headers
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  } catch (error) {
-    // Handle unauthorized access
-    if (currentPath.startsWith('/api')) {
-      // For API routes, return 401 JSON response
-      return new NextResponse(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { 'Content-Type': 'application/json' } }
-      );
-    } else {
-      // For page routes, redirect to login
-      const response = NextResponse.redirect(loginUrl);
-      response.cookies.delete('token');
+    try {
+      await verifyJWT(token);
+      url.pathname = '/dashboard'; // Redirect to dashboard if already logged in
+      return NextResponse.redirect(url);
+    } catch {
+      return NextResponse.next(); // Allow public route if token is invalid
+    }
+  }
+
+  // Protected Route Handling (/dashboard or /)
+  if (isProtectedRoute) {
+    if (!token) {
+      url.pathname = '/auth/login'; // Redirect to login if not logged in
+      return NextResponse.redirect(url);
+    }
+
+    try {
+      await verifyJWT(token);
+      return NextResponse.next(); // Allow access if token is valid
+    } catch {
+      const response = NextResponse.redirect('/auth/login');
+      response.cookies.delete('token'); // Clear invalid token
       return response;
     }
   }
-};
+
+  // Allow all other routes by default
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: [
-    '/dashboard/:path*',
-    '/settings',
-    // Include all routes except static files and favicon
-    '/((?!_next/static|_next/image|favicon.ico).*)'
-  ],
+  matcher: ['/api/:path*', '/dashboard/:path*', '/dashboard', '/', '/auth/:path*'], // Apply middleware to relevant routes
 };
